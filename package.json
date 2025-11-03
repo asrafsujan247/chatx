@@ -1,0 +1,21 @@
+{
+  "name": "chatx-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build" : "npm install --prefix chatx-backend && npm install --prefix chatx-frontend && npm run build --prefix chatx-frontend",
+    "start" : "npm run start --prefix chatx-backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asrafsujan247/chatx.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/asrafsujan247/chatx/issues"
+  },
+  "homepage": "https://github.com/asrafsujan247/chatx#readme"
+}
