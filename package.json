@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines":{
+    "node" : ">=20.0.0"
+  },
   "scripts": {
     "build" : "npm install --prefix chatx-backend && npm install --prefix chatx-frontend && npm run build --prefix chatx-frontend",
     "start" : "npm run start --prefix chatx-backend"
