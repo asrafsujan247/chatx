@@ -7,6 +7,7 @@ import { connectDB } from "./lib/db.js";
 
 dotenv.config();
 
+
 const app = express();
 
 const __dirname = path.resolve();
@@ -31,8 +32,14 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// start server
-app.listen(PORT, () => {
-  console.log("Server is running on port: " + PORT);
-  connectDB();
-});
+// connect to MongoDB and start server
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log("Server is running on port: " + PORT);
+    });
+  })
+  .catch((error) => {
+    console.error("Error connecting to MongoDB: ", error);
+    process.exit(1);
+  });
