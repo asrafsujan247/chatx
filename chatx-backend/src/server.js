@@ -4,6 +4,7 @@ import messageRoutes from "./routes/message.route.js";
 import path from "path";
 import { connectDB } from "./lib/db.js";
 import { ENV } from "./lib/env.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -13,6 +14,8 @@ const PORT = ENV.PORT || 3000;
 
 // middleware
 app.use(express.json());
+// cookie parser
+app.use(cookieParser());
 
 // api routes
 app.use("/api/auth", authRoutes);
