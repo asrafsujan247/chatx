@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router";
 import ChatPage from "./pages/ChatPage";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import { useAuthStore } from "./store/useAuthStore";
 import PageLoader from "./component/PageLoader";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
@@ -46,6 +47,7 @@ const App = () => {
           }
         ></Route>
       </Routes>
+      <Toaster />
     </div>
   );
 };
