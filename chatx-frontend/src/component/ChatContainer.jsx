@@ -4,8 +4,10 @@ import { useChatStore } from "../store/useChatStore";
 import { ChatHeader } from "./ChatHeader";
 import { MessagesLoadingSkeleton } from "./MessageLoadingSkeleton";
 import { NoChatHistoryPlaceholder } from "./NoChatHistoryPlaceholder ";
+import { MessageInput } from "./MessageInput";
 
 export const ChatContainer = () => {
+  // chat store methods to get messages and selected user
   const { selectedUser, getMessagesByUserId, messages, isMessagesLoading } =
     useChatStore();
   const { authUser } = useAuthStore();
@@ -15,12 +17,19 @@ export const ChatContainer = () => {
   useEffect(() => {
     getMessagesByUserId(selectedUser._id);
   }, [selectedUser, getMessagesByUserId]);
+
+  // scroll to bottom when messages change
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
   return (
     <>
       <ChatHeader />
       <div className="flex-1 px-6 overflow-y-auto py-8">
         {messages.length > 0 && !isMessagesLoading ? (
-          <div className="max-w-3xl mx-auto space-y-6">
+          <div className="max-w-3xl mx-auto space-y-4">
             {messages.map((msg) => (
               <div
                 key={msg._id}
@@ -39,11 +48,11 @@ export const ChatContainer = () => {
                     <img
                       src={msg.image}
                       alt="Shared"
-                      className="rounded-lg h-48 object-cover"
+                      className="rounded-lg py-2 h-48 object-cover"
                     />
                   )}
-                  {msg.text && <p className="mt-2">{msg.text}</p>}
-                  <p className="text-xs uppercase mt-1 opacity-75 flex items-center gap-1">
+                  {msg.text && <p className="mt-2 text-sm">{msg.text}</p>}
+                  <p className="text-[10px] uppercase mt-1 opacity-75 flex items-center gap-1">
                     {new Date(msg.createdAt).toLocaleTimeString(undefined, {
                       hour: "2-digit",
                       minute: "2-digit",
@@ -62,6 +71,7 @@ export const ChatContainer = () => {
           <NoChatHistoryPlaceholder name={selectedUser.fullName} />
         )}
       </div>
+      <MessageInput />
     </>
   );
 };
