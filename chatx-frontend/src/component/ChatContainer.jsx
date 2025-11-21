@@ -8,15 +8,30 @@ import { MessageInput } from "./MessageInput";
 
 export const ChatContainer = () => {
   // chat store methods to get messages and selected user
-  const { selectedUser, getMessagesByUserId, messages, isMessagesLoading } =
-    useChatStore();
+  const {
+    selectedUser,
+    getMessagesByUserId,
+    messages,
+    isMessagesLoading,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  } = useChatStore();
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
 
   // get messages by user id when selected user changes
   useEffect(() => {
     getMessagesByUserId(selectedUser._id);
-  }, [selectedUser, getMessagesByUserId]);
+    subscribeToMessages();
+
+    // clean up
+    return () => unsubscribeFromMessages();
+  }, [
+    selectedUser,
+    getMessagesByUserId,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  ]);
 
   // scroll to bottom when messages change
   useEffect(() => {
@@ -51,7 +66,7 @@ export const ChatContainer = () => {
                       className="rounded-lg py-2 h-48 object-cover"
                     />
                   )}
-                  {msg.text && <p className="mt-2 text-sm">{msg.text}</p>}
+                  {msg.text && <p className="mt-1 text-sm">{msg.text}</p>}
                   <p className="text-[10px] uppercase mt-1 opacity-75 flex items-center gap-1">
                     {new Date(msg.createdAt).toLocaleTimeString(undefined, {
                       hour: "2-digit",
