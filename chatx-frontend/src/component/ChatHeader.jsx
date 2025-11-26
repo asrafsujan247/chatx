@@ -1,4 +1,4 @@
-import { XIcon } from "lucide-react";
+import { XIcon, ArrowLeft } from "lucide-react";
 import { useChatStore } from "../store/useChatStore";
 import { useEffect } from "react";
 import { useAuthStore } from "../store/useAuthStore";
@@ -27,6 +27,11 @@ export const ChatHeader = () => {
    border-slate-700/50 max-h-[89px] px-6 flex-1"
     >
       <div className="flex items-center space-x-3">
+        {/* Back Button for Mobile */}
+        <button className="md:hidden mr-2" onClick={() => setSelectedUser(null)}>
+          <ArrowLeft className="w-6 h-6 text-slate-400" />
+        </button>
+
         <div
           className={`avatar ${
             isOnline ? "online" : "offline"

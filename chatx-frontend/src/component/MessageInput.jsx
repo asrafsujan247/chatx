@@ -73,7 +73,7 @@ export const MessageInput = () => {
 
       <form
         onSubmit={handleSendMessage}
-        className="max-w-3xl mx-auto flex space-x-4"
+        className="max-w-3xl mx-auto flex space-x-2 md:space-x-4"
       >
         <input
           type="text"
@@ -82,8 +82,8 @@ export const MessageInput = () => {
             setText(e.target.value);
             isSoundEnabled && playRandomKeyStrokeSound();
           }}
-          className="flex-1 bg-slate-800/50 border border-slate-700/50 text-gray-100 rounded-lg py-2 px-4"
-          placeholder="Type your message..."
+          className="flex-1 bg-slate-800/50 border border-slate-700/50 text-gray-100 rounded-lg py-2 px-3 md:px-4 text-sm md:text-base"
+          placeholder="Type a message..."
         />
 
         <input

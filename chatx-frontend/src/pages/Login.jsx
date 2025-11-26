@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import BorderAnimationContainer from "../component/BorderAnimationContainer";
+
 import {
   MessageCircleIcon,
   LockIcon,
@@ -25,10 +25,9 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full flex items-center justify-center p-4 bg-slate-900">
-      <div className="relative w-full max-w-6xl md:h-[700px] h-[650px]">
-        <BorderAnimationContainer>
-          <div className="w-full flex flex-col md:flex-row">
+    <div className="w-full min-h-screen flex items-center justify-center p-4 bg-slate-900">
+      <div className="relative w-full max-w-6xl h-auto md:h-[700px] beautiful-bg rounded-2xl overflow-hidden flex flex-col md:flex-row">
+          <div className="w-full flex flex-col md:flex-row h-full">
             {/* FORM - LEFT SIDE */}
             <div className="md:w-1/2 p-8 flex items-center justify-center md:border-r border-slate-600/30">
               <div className="w-full max-w-md">
@@ -125,7 +124,7 @@ const Login = () => {
               </div>
             </div>
           </div>
-        </BorderAnimationContainer>
+
       </div>
     </div>
   );

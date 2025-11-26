@@ -1,5 +1,5 @@
 import { ActiveTabSwitch } from "../component/ActiveTabSwitch";
-import BorderAnimationContainer from "../component/BorderAnimationContainer";
+
 import { ChatContainer } from "../component/ChatContainer";
 import { ChatsList } from "../component/ChatsList";
 import { ContactList } from "../component/ContactList";
@@ -11,10 +11,9 @@ const ChatPage = () => {
   const { activeTab, selectedUser } = useChatStore();
 
   return (
-    <div className="relative w-full max-w-6xl h-[700px]">
-      <BorderAnimationContainer>
+    <div className="relative w-full max-w-6xl h-[calc(100vh-2rem)] beautiful-bg rounded-2xl overflow-hidden flex">
         {/* LEFT SIDE */}
-        <div className="w-80 bg-slate-800/50 backdrop-blur-sm flex flex-col">
+        <div className={`w-full md:w-80 bg-slate-800/50 backdrop-blur-sm flex flex-col ${selectedUser ? 'hidden md:flex' : 'flex'}`}>
           {/* Profile Header */}
           <ProfileHeader />
           {/* Active Tab Switch */}
@@ -26,11 +25,11 @@ const ChatPage = () => {
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="flex-1 flex flex-col bg-slate-900/50 backdrop-blur-sm">
+        <div className={`flex-1 flex flex-col bg-slate-900/50 backdrop-blur-sm ${!selectedUser ? 'hidden md:flex' : 'flex'}`}>
           {/* Chat Container */}
           {selectedUser ? <ChatContainer /> : <NoConversationPlaceholder />}
         </div>
-      </BorderAnimationContainer>
+
     </div>
   );
 };
