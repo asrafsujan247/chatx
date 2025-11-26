@@ -7,10 +7,12 @@ import User from "../models/User.js";
 export const getAllContacts = async (req, res) => {
   try {
     const loggedInUserId = req.user._id;
-    
+
     // Find the logged-in user and populate their contacts
-    const user = await User.findById(loggedInUserId)
-      .populate("contacts", "-password");
+    const user = await User.findById(loggedInUserId).populate(
+      "contacts",
+      "-password"
+    );
 
     // Return only the user's contacts
     res.status(200).json(user.contacts || []);
@@ -65,12 +67,13 @@ export const sendMessage = async (req, res) => {
     // Check if receiver is in sender's contacts
     const sender = await User.findById(senderId);
     const isContact = sender.contacts.some(
-      contactId => contactId.toString() === receiverId.toString()
+      (contactId) => contactId.toString() === receiverId.toString()
     );
-    
+
     if (!isContact) {
-      return res.status(403).json({ 
-        message: "You can only send messages to your contacts. Please add this user first." 
+      return res.status(403).json({
+        message:
+          "You can only send messages to your contacts. Please add this user first.",
       });
     }
 
@@ -93,6 +96,16 @@ export const sendMessage = async (req, res) => {
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
+
+      // Also emit message notification
+      io.to(receiverSocketId).emit("messageNotification", {
+        messageId: newMessage._id,
+        senderId: senderId,
+        senderName: req.user.fullName,
+        text: newMessage.text,
+        image: newMessage.image,
+        timestamp: newMessage.createdAt,
+      });
     }
 
     res.status(201).json(newMessage);
@@ -106,16 +119,16 @@ export const sendMessage = async (req, res) => {
 export const getChatPartners = async (req, res) => {
   try {
     const loggedInUser = req.user._id;
-    
+
     // Get user's contacts
     const user = await User.findById(loggedInUser);
-    const contactIds = user.contacts.map(id => id.toString());
-    
+    const contactIds = user.contacts.map((id) => id.toString());
+
     // find the messages where the logged-in user is either the sender or receiver
     const messages = await Message.find({
       $or: [{ senderId: loggedInUser }, { receiverId: loggedInUser }],
     });
-    
+
     // extract unique chat partner ids
     const chatPartnerIds = [
       ...new Set(
@@ -128,7 +141,7 @@ export const getChatPartners = async (req, res) => {
     ];
 
     // Filter to only include contacts
-    const filteredChatPartnerIds = chatPartnerIds.filter(id => 
+    const filteredChatPartnerIds = chatPartnerIds.filter((id) =>
       contactIds.includes(id)
     );
 

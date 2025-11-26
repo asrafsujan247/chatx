@@ -8,13 +8,27 @@ import { ContactList } from "../component/ContactList";
 import { NoConversationPlaceholder } from "../component/NoConversationPlaceholder";
 import { ProfileHeader } from "../component/ProfileHeader";
 import { AddContact } from "../component/AddContact";
+import { FriendRequests } from "../component/FriendRequests";
 import { useChatStore } from "../store/useChatStore";
 
 const ChatPage = () => {
-  const { activeTab, selectedUser, setSelectedUser, chats, allContacts } =
-    useChatStore();
+  const {
+    activeTab,
+    selectedUser,
+    setSelectedUser,
+    chats,
+    allContacts,
+    pendingRequests,
+    getPendingRequests,
+  } = useChatStore();
   const { id } = useParams();
   const [showAddContact, setShowAddContact] = useState(false);
+  const [showFriendRequests, setShowFriendRequests] = useState(false);
+
+  // Load pending requests on mount
+  useEffect(() => {
+    getPendingRequests();
+  }, [getPendingRequests]);
 
   useEffect(() => {
     if (id) {
@@ -41,7 +55,11 @@ const ChatPage = () => {
         }`}
       >
         {/* Profile Header */}
-        <ProfileHeader onAddContactClick={() => setShowAddContact(true)} />
+        <ProfileHeader
+          onAddContactClick={() => setShowAddContact(true)}
+          onRequestsClick={() => setShowFriendRequests(true)}
+          requestCount={pendingRequests.length}
+        />
         {/* Active Tab Switch */}
         <ActiveTabSwitch />
         {/* Chats List */}
@@ -63,6 +81,11 @@ const ChatPage = () => {
       {/* Add Contact Modal - Rendered at ChatPage level */}
       {showAddContact && (
         <AddContact onClose={() => setShowAddContact(false)} />
+      )}
+
+      {/* Friend Requests Modal */}
+      {showFriendRequests && (
+        <FriendRequests onClose={() => setShowFriendRequests(false)} />
       )}
     </div>
   );

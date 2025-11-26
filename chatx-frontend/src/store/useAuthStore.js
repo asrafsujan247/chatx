@@ -109,6 +109,98 @@ export const useAuthStore = create((set, get) => ({
     socket.on("getOnlineUsers", (userIds) => {
       set({ onlineUsers: userIds });
     });
+
+    // Listen for friend request notifications
+    socket.on("friendRequest", (data) => {
+      const { sender } = data;
+
+      // Play notification sound if enabled
+      import("./useChatStore").then(({ useChatStore }) => {
+        const { isSoundEnabled } = useChatStore.getState();
+        if (isSoundEnabled) {
+          const notificationSound = new Audio("/sounds/notification.mp3");
+          notificationSound
+            .play()
+            .catch((e) => console.log("Audio play failed:", e));
+        }
+
+        // Refresh pending requests
+        useChatStore.getState().getPendingRequests();
+      });
+
+      // Show toast notification
+      toast.success(`${sender.fullName} sent you a friend request!`, {
+        duration: 4000,
+        icon: "👋",
+      });
+    });
+
+    // Listen for friend request response
+    socket.on("requestResponse", (data) => {
+      const { status, user } = data;
+
+      // Play notification sound if enabled
+      import("./useChatStore").then(({ useChatStore }) => {
+        const { isSoundEnabled } = useChatStore.getState();
+        if (isSoundEnabled) {
+          const notificationSound = new Audio("/sounds/notification.mp3");
+          notificationSound
+            .play()
+            .catch((e) => console.log("Audio play failed:", e));
+        }
+
+        if (status === "accepted") {
+          // Refresh contacts and sent requests
+          useChatStore.getState().getAllContacts();
+          useChatStore.getState().getSentRequests();
+        } else {
+          // Refresh sent requests
+          useChatStore.getState().getSentRequests();
+        }
+      });
+
+      // Show toast notification
+      if (status === "accepted") {
+        toast.success(`${user.fullName} accepted your friend request!`, {
+          duration: 4000,
+          icon: "✅",
+        });
+      } else {
+        toast(`${user.fullName} declined your friend request`, {
+          duration: 4000,
+          icon: "❌",
+        });
+      }
+    });
+
+    // Listen for message notifications
+    socket.on("messageNotification", (data) => {
+      const { senderId, senderName } = data;
+
+      // Check if user is already viewing this chat
+      import("./useChatStore").then(({ useChatStore }) => {
+        const { selectedUser, isSoundEnabled } = useChatStore.getState();
+
+        // Don't show notification if already viewing this chat
+        if (selectedUser?._id === senderId) {
+          return;
+        }
+
+        // Play notification sound if enabled
+        if (isSoundEnabled) {
+          const notificationSound = new Audio("/sounds/notification.mp3");
+          notificationSound
+            .play()
+            .catch((e) => console.log("Audio play failed:", e));
+        }
+
+        // Show toast notification
+        toast(`New message from ${senderName}`, {
+          duration: 3000,
+          icon: "💬",
+        });
+      });
+    });
   },
 
   // socket disconnection method
