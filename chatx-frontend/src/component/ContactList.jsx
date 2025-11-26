@@ -6,8 +6,7 @@ import { useAuthStore } from "../store/useAuthStore";
 
 export const ContactList = () => {
   // chat store methods to get all contacts
-  const { getAllContacts, allContacts, isUsersLoading } =
-    useChatStore();
+  const { getAllContacts, allContacts, isUsersLoading } = useChatStore();
   const navigate = useNavigate();
   // auth store methods to get online users
   const { onlineUsers } = useAuthStore();
@@ -18,6 +17,17 @@ export const ContactList = () => {
 
   // if users are loading, show loading skeleton
   if (isUsersLoading) return <UsersLoadingSkeleton />;
+
+  // if no contacts, show empty state
+  if (allContacts.length === 0) {
+    return (
+      <div className="text-center py-8 px-4">
+        <p className="text-slate-400 text-sm">
+          No contacts yet. Click the + icon above to add contacts by email.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <>

@@ -1,12 +1,12 @@
 import { useState, useRef } from "react";
-import { LogOutIcon, VolumeOffIcon, Volume2Icon } from "lucide-react";
+import { LogOutIcon, VolumeOffIcon, Volume2Icon, UserPlus } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
 
 // mouse click sound
 const mouseClickSound = new Audio("/sounds/mouse-click.mp3");
 
-export const ProfileHeader = () => {
+export const ProfileHeader = ({ onAddContactClick }) => {
   // auth store methods
   const { logout, authUser, updateProfile } = useAuthStore();
   // chat store methods
@@ -73,6 +73,15 @@ export const ProfileHeader = () => {
 
         {/* BUTTONS */}
         <div className="flex gap-4 items-center">
+          {/* ADD CONTACT BTN */}
+          <button
+            className="text-slate-400 hover:text-cyan-400 transition-colors tooltip"
+            onClick={onAddContactClick}
+            data-tip="Add Contact"
+          >
+            <UserPlus className="size-5" />
+          </button>
+
           {/* LOGOUT BTN */}
           <button
             className="text-slate-400 hover:text-slate-200 transition-colors tooltip"
