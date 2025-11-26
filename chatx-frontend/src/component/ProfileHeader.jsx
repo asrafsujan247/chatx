@@ -1,16 +1,6 @@
 import { useState, useRef } from "react";
-import {
-  LogOutIcon,
-  VolumeOffIcon,
-  Volume2Icon,
-  UserPlus,
-  Bell,
-} from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
-import { useChatStore } from "../store/useChatStore";
-
-// mouse click sound
-const mouseClickSound = new Audio("/sounds/mouse-click.mp3");
+import { SettingsMenu } from "./SettingsMenu";
 
 export const ProfileHeader = ({
   onAddContactClick,
@@ -18,9 +8,7 @@ export const ProfileHeader = ({
   requestCount,
 }) => {
   // auth store methods
-  const { logout, authUser, updateProfile } = useAuthStore();
-  // chat store methods
-  const { isSoundEnabled, toggleSound } = useChatStore();
+  const { authUser, updateProfile } = useAuthStore();
   // selected image state
   const [selectedImg, setSelectedImg] = useState(null);
 
@@ -40,6 +28,7 @@ export const ProfileHeader = ({
       await updateProfile({ profilePic: base64Image });
     };
   };
+
   return (
     <div className="p-5 border-b border-slate-700/50">
       <div className="flex items-center justify-between">
@@ -76,65 +65,16 @@ export const ProfileHeader = ({
                 ? authUser.fullName.slice(0, 14) + " ..."
                 : authUser.fullName}
             </h3>
-
             <p className="text-slate-400 text-xs">Online</p>
           </div>
         </div>
 
-        {/* BUTTONS */}
-        <div className="flex gap-4 items-center">
-          {/* FRIEND REQUESTS BTN */}
-          <button
-            className="text-slate-400 hover:text-cyan-400 transition-colors tooltip relative"
-            onClick={onRequestsClick}
-            data-tip="Friend Requests"
-          >
-            <Bell className="size-5" />
-            {requestCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                {requestCount}
-              </span>
-            )}
-          </button>
-
-          {/* ADD CONTACT BTN */}
-          <button
-            className="text-slate-400 hover:text-cyan-400 transition-colors tooltip"
-            onClick={onAddContactClick}
-            data-tip="Add Contact"
-          >
-            <UserPlus className="size-5" />
-          </button>
-
-          {/* LOGOUT BTN */}
-          <button
-            className="text-slate-400 hover:text-slate-200 transition-colors tooltip"
-            onClick={logout}
-            data-tip="Logout"
-          >
-            <LogOutIcon className="size-5" />
-          </button>
-
-          {/* SOUND TOGGLE BTN */}
-          <button
-            className="text-slate-400 hover:text-slate-200 transition-colors tooltip"
-            onClick={() => {
-              // play click sound before toggling sound
-              mouseClickSound.currentTime = 0; // reset to start
-              mouseClickSound
-                .play()
-                .catch((error) => console.log("Audio play failed:", error));
-              toggleSound();
-            }}
-            data-tip="Sound"
-          >
-            {isSoundEnabled ? (
-              <Volume2Icon className="size-5" />
-            ) : (
-              <VolumeOffIcon className="size-5" />
-            )}
-          </button>
-        </div>
+        {/* SETTINGS MENU */}
+        <SettingsMenu
+          onAddContactClick={onAddContactClick}
+          onRequestsClick={onRequestsClick}
+          requestCount={requestCount}
+        />
       </div>
     </div>
   );
