@@ -37,6 +37,16 @@ const App = () => {
           }
         ></Route>
         <Route
+          path="/chat/:id"
+          element={
+            authUser ? (
+              <ChatPage></ChatPage>
+            ) : (
+              <Navigate to={"/login"}></Navigate>
+            )
+          }
+        ></Route>
+        <Route
           path="/login"
           element={!authUser ? <Login></Login> : <Navigate to={"/"}></Navigate>}
         ></Route>

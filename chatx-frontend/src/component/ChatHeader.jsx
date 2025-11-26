@@ -1,10 +1,12 @@
-import { XIcon, ArrowLeft } from "lucide-react";
+import { XIcon } from "lucide-react";
+import { useNavigate } from "react-router";
 import { useChatStore } from "../store/useChatStore";
 import { useEffect } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 
 export const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
+  const navigate = useNavigate();
   // auth store methods to get online users
   const { onlineUsers } = useAuthStore();
   const isOnline = onlineUsers.includes(selectedUser._id);
@@ -12,14 +14,14 @@ export const ChatHeader = () => {
   useEffect(() => {
     // handle esc key to close chat
     const handleEscKey = (event) => {
-      if (event.key === "Escape") setSelectedUser(null);
+      if (event.key === "Escape") navigate("/");
     };
 
     window.addEventListener("keydown", handleEscKey);
 
     // cleanup function
     return () => window.removeEventListener("keydown", handleEscKey);
-  }, [setSelectedUser]);
+  }, [setSelectedUser, navigate]);
 
   return (
     <div
@@ -27,11 +29,6 @@ export const ChatHeader = () => {
    border-slate-700/50 max-h-[89px] px-6 flex-1"
     >
       <div className="flex items-center space-x-3">
-        {/* Back Button for Mobile */}
-        <button className="md:hidden mr-2" onClick={() => setSelectedUser(null)}>
-          <ArrowLeft className="w-6 h-6 text-slate-400" />
-        </button>
-
         <div
           className={`avatar ${
             isOnline ? "online" : "offline"
@@ -56,7 +53,7 @@ export const ChatHeader = () => {
       <button
         className="tooltip"
         data-tip="Close"
-        onClick={() => setSelectedUser(null)}
+        onClick={() => navigate("/")}
       >
         <XIcon className="w-5 h-5 text-slate-400 hover:text-slate-200 transition-colors cursor-pointer" />
       </button>

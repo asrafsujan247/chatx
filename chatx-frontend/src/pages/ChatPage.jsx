@@ -1,4 +1,6 @@
 import { ActiveTabSwitch } from "../component/ActiveTabSwitch";
+import { useParams } from "react-router";
+import { useEffect } from "react";
 
 import { ChatContainer } from "../component/ChatContainer";
 import { ChatsList } from "../component/ChatsList";
@@ -7,8 +9,25 @@ import { NoConversationPlaceholder } from "../component/NoConversationPlaceholde
 import { ProfileHeader } from "../component/ProfileHeader";
 import { useChatStore } from "../store/useChatStore";
 
+
+
 const ChatPage = () => {
-  const { activeTab, selectedUser } = useChatStore();
+  const { activeTab, selectedUser, setSelectedUser, chats, allContacts } = useChatStore();
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      const user = chats.find((c) => c._id === id) || allContacts.find((c) => c._id === id);
+      if (user) {
+        setSelectedUser(user);
+      }
+    } else {
+        // Only clear if we are on the root chat page and there is a selected user
+        // This prevents clearing when navigating TO a chat
+        // Actually, if id is undefined, we SHOULD clear selectedUser to show the list
+        setSelectedUser(null);
+    }
+  }, [id, chats, allContacts, setSelectedUser]);
 
   return (
     <div className="relative w-full max-w-6xl h-[calc(100vh-2rem)] beautiful-bg rounded-2xl overflow-hidden flex">
