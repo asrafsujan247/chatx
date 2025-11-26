@@ -1,7 +1,10 @@
 import express from "express";
 import {
   searchUserByEmail,
-  addContact,
+  sendFriendRequest,
+  respondToRequest,
+  getPendingRequests,
+  getSentRequests,
   getMyContacts,
 } from "../controllers/user.controller.js";
 import { protectRoute } from "../middleware/auth.middleware.js";
@@ -15,8 +18,17 @@ router.use(arcjetProtection, protectRoute);
 // Search user by email
 router.get("/search", searchUserByEmail);
 
-// Add contact
-router.post("/add-contact", addContact);
+// Send friend request
+router.post("/send-request", sendFriendRequest);
+
+// Respond to friend request (accept/reject)
+router.post("/respond-request", respondToRequest);
+
+// Get pending incoming requests
+router.get("/requests/pending", getPendingRequests);
+
+// Get sent requests
+router.get("/requests/sent", getSentRequests);
 
 // Get my contacts
 router.get("/contacts", getMyContacts);

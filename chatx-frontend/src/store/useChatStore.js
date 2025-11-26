@@ -8,6 +8,8 @@ export const useChatStore = create((set, get) => ({
   allContacts: [],
   chats: [],
   messages: [],
+  pendingRequests: [],
+  sentRequests: [],
   activeTab: "chats",
   selectedUser: null,
   isUsersLoading: false,
@@ -39,7 +41,9 @@ export const useChatStore = create((set, get) => ({
   // search user by email
   searchUserByEmail: async (email) => {
     try {
-      const res = await axiosInstance.get(`/users/search?email=${encodeURIComponent(email)}`);
+      const res = await axiosInstance.get(
+        `/users/search?email=${encodeURIComponent(email)}`
+      );
       return res.data;
     } catch (error) {
       toast.error(error?.response?.data?.message || "User not found");
@@ -47,16 +51,57 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
-  // add contact
-  addContact: async (email) => {
+  // send friend request
+  sendFriendRequest: async (email) => {
     try {
-      const res = await axiosInstance.post("/users/add-contact", { email });
-      // Refresh contacts list after adding
+      const res = await axiosInstance.post("/users/send-request", { email });
+      // Refresh sent requests
+      get().getSentRequests();
+      return res.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to send request");
+      throw error;
+    }
+  },
+
+  // respond to friend request
+  respondToRequest: async (requestId, accept) => {
+    try {
+      const res = await axiosInstance.post("/users/respond-request", {
+        requestId,
+        accept,
+      });
+      // Refresh pending requests and contacts
+      get().getPendingRequests();
       get().getAllContacts();
       return res.data;
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to add contact");
+      toast.error(
+        error?.response?.data?.message || "Failed to respond to request"
+      );
       throw error;
+    }
+  },
+
+  // get pending incoming requests
+  getPendingRequests: async () => {
+    try {
+      const res = await axiosInstance.get("/users/requests/pending");
+      set({ pendingRequests: res.data });
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to load requests");
+    }
+  },
+
+  // get sent requests
+  getSentRequests: async () => {
+    try {
+      const res = await axiosInstance.get("/users/requests/sent");
+      set({ sentRequests: res.data });
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Failed to load sent requests"
+      );
     }
   },
 

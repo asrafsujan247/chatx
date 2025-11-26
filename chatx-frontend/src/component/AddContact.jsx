@@ -8,7 +8,7 @@ export const AddContact = ({ onClose }) => {
   const [searchResult, setSearchResult] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
-  const { searchUserByEmail, addContact } = useChatStore();
+  const { searchUserByEmail, sendFriendRequest } = useChatStore();
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -37,8 +37,8 @@ export const AddContact = ({ onClose }) => {
 
     setIsAdding(true);
     try {
-      await addContact(searchResult.email);
-      toast.success(`${searchResult.fullName} added to contacts!`);
+      await sendFriendRequest(searchResult.email);
+      toast.success(`Friend request sent to ${searchResult.fullName}!`);
       setEmail("");
       setSearchResult(null);
       onClose();
@@ -121,7 +121,7 @@ export const AddContact = ({ onClose }) => {
                 ) : (
                   <>
                     <UserPlus className="w-4 h-4" />
-                    Add
+                    Send Request
                   </>
                 )}
               </button>
