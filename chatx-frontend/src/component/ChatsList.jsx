@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router";
 import { useChatStore } from "../store/useChatStore";
 import { UsersLoadingSkeleton } from "./UsersLoadingSkeleton";
 import { NoChatsFound } from "./NoChatsFound";
@@ -6,8 +7,9 @@ import { useAuthStore } from "../store/useAuthStore";
 
 export const ChatsList = () => {
   // chat store methods to get my chat partners and selected user
-  const { getMyChatPartners, chats, isUsersLoading, setSelectedUser } =
+  const { getMyChatPartners, chats, isUsersLoading } =
     useChatStore();
+  const navigate = useNavigate();
   // auth store methods to get online users
   const { onlineUsers } = useAuthStore();
 
@@ -24,7 +26,7 @@ export const ChatsList = () => {
         <div
           key={chat._id}
           className="bg-cyan-500/10 p-4 rounded-lg cursor-pointer hover:bg-cyan-500/20 transition-colors"
-          onClick={() => setSelectedUser(chat)}
+          onClick={() => navigate(`/chat/${chat._id}`)}
         >
           <div className="flex items-center gap-3">
             <div
