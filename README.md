@@ -11,6 +11,7 @@
 
 ## ✨ Core Features
 
+- **Private Contacts System**: Add users by email to create your personal contact list
 - **Real-Time Messaging**: Instant bi-directional communication powered by Socket.io
 - **Fully Responsive Design**: Seamless experience across mobile, tablet, and desktop devices
 - **Smart Routing**: URL-based navigation with proper browser history management
@@ -130,6 +131,23 @@ The entire application has been engineered to be **100% responsive** across all 
 - **Mobile (< 768px)**: Single-view navigation that switches between chat list and active conversation
 
 All components, including `ChatPage`, `Login`, `SignUp`, `ChatHeader`, `ChatsList`, and `ContactList`, have been optimized with responsive breakpoints and flexible layouts.
+
+## 👥 Adding Contacts
+
+ChatX uses a **private contacts system** to ensure user privacy and control:
+
+### How It Works
+1. **Search by Email**: Click the `+` icon in the profile header to open the Add Contact modal
+2. **Find Users**: Enter the email address of the user you want to add
+3. **Add to Contacts**: Click "Add" to add them to your contact list
+4. **Start Chatting**: Only users in your contacts can message you, and you can only message your contacts
+
+### Privacy Model
+- Users are **not publicly visible** to everyone
+- You can only see and chat with users you've explicitly added
+- Other users cannot message you unless you've added them as a contact
+- This ensures a private, controlled messaging experience
+
 
 ## 📞 Contact
 

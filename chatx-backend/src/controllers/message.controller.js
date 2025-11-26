@@ -3,17 +3,17 @@ import { getReceiverSocketId, io } from "../lib/socket.js";
 import Message from "../models/Message.js";
 import User from "../models/User.js";
 
-// Get all contacts except the logged-in user
+// Get all contacts (only users in the logged-in user's contacts list)
 export const getAllContacts = async (req, res) => {
   try {
-    // Exclude the logged-in user from the contacts list
     const loggedInUserId = req.user._id;
-    const filteredUsers = await User.find({
-      _id: { $ne: loggedInUserId },
-    }).select("-password");
+    
+    // Find the logged-in user and populate their contacts
+    const user = await User.findById(loggedInUserId)
+      .populate("contacts", "-password");
 
-    // Return the filtered list of users
-    res.status(200).json(filteredUsers);
+    // Return only the user's contacts
+    res.status(200).json(user.contacts || []);
   } catch (error) {
     console.log("Error in getAllContacts:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -62,6 +62,18 @@ export const sendMessage = async (req, res) => {
       return res.status(404).json({ message: "Receiver not found." });
     }
 
+    // Check if receiver is in sender's contacts
+    const sender = await User.findById(senderId);
+    const isContact = sender.contacts.some(
+      contactId => contactId.toString() === receiverId.toString()
+    );
+    
+    if (!isContact) {
+      return res.status(403).json({ 
+        message: "You can only send messages to your contacts. Please add this user first." 
+      });
+    }
+
     let imageUrl;
     if (image) {
       // upload base64 image to cloudinary
@@ -90,14 +102,20 @@ export const sendMessage = async (req, res) => {
   }
 };
 
-// getChatPartners
+// getChatPartners (only return chat partners who are in contacts)
 export const getChatPartners = async (req, res) => {
   try {
     const loggedInUser = req.user._id;
+    
+    // Get user's contacts
+    const user = await User.findById(loggedInUser);
+    const contactIds = user.contacts.map(id => id.toString());
+    
     // find the messages where the logged-in user is either the sender or receiver
     const messages = await Message.find({
       $or: [{ senderId: loggedInUser }, { receiverId: loggedInUser }],
     });
+    
     // extract unique chat partner ids
     const chatPartnerIds = [
       ...new Set(
@@ -109,9 +127,14 @@ export const getChatPartners = async (req, res) => {
       ),
     ];
 
+    // Filter to only include contacts
+    const filteredChatPartnerIds = chatPartnerIds.filter(id => 
+      contactIds.includes(id)
+    );
+
     // fetch user details of chat partners
     const chatPartners = await User.find({
-      _id: { $in: chatPartnerIds },
+      _id: { $in: filteredChatPartnerIds },
     }).select("-password");
 
     // return chat partners

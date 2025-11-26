@@ -36,6 +36,30 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
+  // search user by email
+  searchUserByEmail: async (email) => {
+    try {
+      const res = await axiosInstance.get(`/users/search?email=${encodeURIComponent(email)}`);
+      return res.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "User not found");
+      throw error;
+    }
+  },
+
+  // add contact
+  addContact: async (email) => {
+    try {
+      const res = await axiosInstance.post("/users/add-contact", { email });
+      // Refresh contacts list after adding
+      get().getAllContacts();
+      return res.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to add contact");
+      throw error;
+    }
+  },
+
   // get my chat partners
   getMyChatPartners: async () => {
     set({ isUsersLoading: true });
