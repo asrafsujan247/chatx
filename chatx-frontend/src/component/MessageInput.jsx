@@ -82,7 +82,7 @@ export const MessageInput = () => {
             setText(e.target.value);
             isSoundEnabled && playRandomKeyStrokeSound();
           }}
-          className="flex-1 bg-slate-800/50 border border-slate-700/50 text-gray-100 rounded-lg py-2 px-3 text-sm md:text-base min-w-0"
+          className="flex-1 bg-slate-800/50 border border-slate-700/50 text-gray-100 rounded-lg py-2 px-3 text-sm md:text-base min-w-0 focus:outline-none focus:ring-2 focus:ring-cyan-500"
           placeholder="Type a message..."
         />
 
