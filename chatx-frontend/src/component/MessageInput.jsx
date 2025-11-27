@@ -51,7 +51,7 @@ export const MessageInput = () => {
   };
 
   return (
-    <div className="p-4 border-t border-slate-700/50">
+    <div className="p-2 md:p-4 border-t border-slate-700/50 w-full">
       {imagePreview && (
         <div className="max-w-3xl mx-auto mb-3 flex items-center">
           <div className="relative">
@@ -73,7 +73,7 @@ export const MessageInput = () => {
 
       <form
         onSubmit={handleSendMessage}
-        className="max-w-3xl mx-auto flex space-x-2 md:space-x-4"
+        className="max-w-3xl mx-auto flex items-center gap-2"
       >
         <input
           type="text"
@@ -82,7 +82,7 @@ export const MessageInput = () => {
             setText(e.target.value);
             isSoundEnabled && playRandomKeyStrokeSound();
           }}
-          className="flex-1 bg-slate-800/50 border border-slate-700/50 text-gray-100 rounded-lg py-2 px-3 md:px-4 text-sm md:text-base"
+          className="flex-1 bg-slate-800/50 border border-slate-700/50 text-gray-100 rounded-lg py-2 px-3 text-sm md:text-base min-w-0"
           placeholder="Type a message..."
         />
 
@@ -97,7 +97,7 @@ export const MessageInput = () => {
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className={`bg-slate-800/50 text-slate-400 hover:text-slate-200 rounded-lg px-4 transition-colors ${
+          className={`bg-slate-800/50 text-slate-400 hover:text-slate-200 rounded-lg px-2 md:px-4 py-2 transition-colors flex-shrink-0 ${
             imagePreview ? "text-cyan-500" : ""
           }`}
         >
@@ -106,7 +106,7 @@ export const MessageInput = () => {
         <button
           type="submit"
           disabled={!text.trim() && !imagePreview}
-          className="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white rounded-lg px-4 py-2 font-medium hover:from-cyan-500 hover:to-cyan-300 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+          className="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white rounded-lg px-2 md:px-4 py-2 font-medium hover:from-cyan-500 hover:to-cyan-300 transition-all disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0"
         >
           <SendIcon className="w-5 h-5 group-hover:text-cyan-200" />
         </button>

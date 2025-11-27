@@ -42,7 +42,7 @@ export const ChatContainer = () => {
   return (
     <>
       <ChatHeader />
-      <div className="flex-1 px-2 md:px-6 overflow-y-auto py-4 md:py-8">
+      <div className="flex-1 px-2 md:px-6 overflow-y-auto py-2 md:py-4 w-full">
         {messages.length > 0 && !isMessagesLoading ? (
           <div className="max-w-3xl mx-auto space-y-4">
             {messages.map((msg) => (
@@ -63,10 +63,12 @@ export const ChatContainer = () => {
                     <img
                       src={msg.image}
                       alt="Shared"
-                      className="rounded-lg py-2 h-32 md:h-48 object-cover"
+                      className="rounded-lg py-2 max-w-full h-auto max-h-60 object-cover"
                     />
                   )}
-                  {msg.text && <p className="mt-1 text-sm">{msg.text}</p>}
+                  {msg.text && (
+                    <p className="mt-1 text-sm break-words">{msg.text}</p>
+                  )}
                   <p className="text-[10px] uppercase mt-1 opacity-75 flex items-center gap-1">
                     {new Date(msg.createdAt).toLocaleTimeString(undefined, {
                       hour: "2-digit",

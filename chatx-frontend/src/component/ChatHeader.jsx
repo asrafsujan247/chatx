@@ -26,15 +26,13 @@ export const ChatHeader = () => {
   return (
     <div
       className="flex justify-between items-center bg-slate-800/50 border-b
-   border-slate-700/50 max-h-[89px] px-6 flex-1"
+   border-slate-700/50 max-h-[89px] px-3 md:px-6 flex-1 w-full overflow-hidden"
     >
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-2 md:space-x-3 min-w-0 flex-1">
         <div
-          className={`avatar ${
-            isOnline ? "online" : "offline"
-          }`}
+          className={`avatar ${isOnline ? "online" : "offline"} flex-shrink-0`}
         >
-          <div className="w-12 rounded-full">
+          <div className="w-10 md:w-12 rounded-full">
             <img
               src={selectedUser.profilePic || "/avatar.png"}
               alt={selectedUser.fullName}
@@ -42,16 +40,18 @@ export const ChatHeader = () => {
           </div>
         </div>
 
-        <div>
-          <h3 className="text-slate-200 font-medium">
+        <div className="min-w-0 flex-1">
+          <h3 className="text-slate-200 font-medium truncate">
             {selectedUser.fullName}
           </h3>
-          <p className="text-slate-400 text-sm">{isOnline ? "Online" : "Offline"}</p>
+          <p className="text-slate-400 text-sm truncate">
+            {isOnline ? "Online" : "Offline"}
+          </p>
         </div>
       </div>
 
       <button
-        className="tooltip"
+        className="tooltip flex-shrink-0 ml-2"
         data-tip="Close"
         onClick={() => navigate("/")}
       >
